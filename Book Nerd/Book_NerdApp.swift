@@ -4,7 +4,7 @@
 //
 //  Created by Parth Antala on 2024-07-12.
 //
-
+import SwiftData
 import SwiftUI
 
 @main
@@ -13,5 +13,6 @@ struct Book_NerdApp: App {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(for: Student.self)
     }
 }
