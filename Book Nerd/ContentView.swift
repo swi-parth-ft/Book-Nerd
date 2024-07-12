@@ -17,6 +17,7 @@ struct ContentView: View {
         SortDescriptor(\Book.author)
     ]) var books: [Book]
     @State private var showingAddScreen = false
+    @State private var showingDetails = false
     
     var body: some View {
         NavigationStack {
@@ -51,6 +52,7 @@ struct ContentView: View {
                             }.listRowBackground(book.rating < 2 ? Color.red.opacity(0.3) : Color.white.opacity(0.5))
                         }
                         .onDelete(perform: deleteBooks)
+                       
                     }
                 }
                 .scrollContentBackground(.hidden)

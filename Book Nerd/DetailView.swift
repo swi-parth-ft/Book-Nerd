@@ -16,50 +16,81 @@ struct DetailView: View {
     @State private var showingDeleteAlert = false
     
     var body: some View {
-        ScrollView{
-            ZStack {
-                Image("\(book.genre)")
-                    .resizable()
-                    .scaledToFit()
+        ZStack {
+            
+            LinearGradient(gradient: Gradient(colors: [Color.white, Color.blue]), startPoint: .top, endPoint: .bottom)
+                .edgesIgnoringSafeArea(.all)
+            
+            ScrollView{
+                ZStack {
+                    
+                    RoundedRectangle(cornerRadius: 50)
+                        .fill(.black.opacity(0.9))
+                        .opacity(0.4)
+                        .shadow(radius: 15)
+                        .frame(width: 350, height: 200)
+                    
+                    Image("\(book.genre)")
+                        .resizable()
+                        .scaledToFit()
+                        .cornerRadius(30)
+                        .ignoresSafeArea()
+                        .frame(width: 320, height: 250)
+                        .shadow(radius: 5)
+                        
+                    
+                    Text(book.genre.uppercased())
+                        .fontWeight(.black)
+                        .padding()
+                        .foregroundStyle(.white)
+                        .background(.black.opacity(0.75))
+                        .clipShape(.capsule)
+                        .offset(x: -5, y: -5)
+                    
+                }
                 
-                Text(book.genre.uppercased())
-                    .fontWeight(.black)
+                RatingView(rating: .constant(book.rating))
+                    .font(.largeTitle)
+                    .shadow(radius: 5)
                     .padding()
-                    .foregroundStyle(.white)
-                    .background(.black.opacity(0.75))
-                    .clipShape(.capsule)
-                    .offset(x: -5, y: -5)
+                
+                VStack {
+                    
+                    Text(book.title)
+                        .font(.largeTitle)
+                        .foregroundStyle(.primary)
+                    Text(book.author)
+                        .font(.title)
+                        .foregroundStyle(.secondary)
+                }
+                
+                
+                    
+                
+                VStack {
+                    Text(book.review)
+                    Text("Reviewed On: \(book.date.formattedDate()) \(book.date.formattedTime())")
+                        .foregroundStyle(.secondary)
+                }
+                .padding()
+                
+                
+                
                 
             }
-            Text(book.author)
-                .font(.title)
-                .foregroundStyle(.secondary)
-            
-            Text(book.review)
-                .padding()
-            
-            VStack {
-                Text("Current Date: \(book.date.formattedDate())")
-                Text("Current Time: \(book.date.formattedTime())")
-                    }
-            RatingView(rating: .constant(book.rating))
-                .font(.largeTitle)
-            
-            
-            
-        }
-        .navigationTitle(book.title)
-        .navigationBarTitleDisplayMode(.inline)
-        .scrollBounceBehavior(.basedOnSize)
-        .alert("Delete book", isPresented: $showingDeleteAlert) {
-            Button("Delete", role: .destructive, action: deleteBook)
-            Button("Cancel", role: .cancel) { }
-        } message: {
-            Text("Are you sure?")
-        }
-        .toolbar {
-            Button("Delete this book", systemImage: "trash") {
-                showingDeleteAlert = true
+            .navigationTitle(book.title)
+            .navigationBarTitleDisplayMode(.inline)
+            .scrollBounceBehavior(.basedOnSize)
+            .alert("Delete book", isPresented: $showingDeleteAlert) {
+                Button("Delete", role: .destructive, action: deleteBook)
+                Button("Cancel", role: .cancel) { }
+            } message: {
+                Text("Are you sure?")
+            }
+            .toolbar {
+                Button("Delete this book", systemImage: "trash") {
+                    showingDeleteAlert = true
+                }
             }
         }
     }

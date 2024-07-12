@@ -32,39 +32,50 @@ struct AddBookView: View {
     
     var body: some View {
         NavigationStack {
-            Form {
-                Section {
-                    TextField("Name of book", text: $title)
-                    TextField("Author's name", text: $author)
-
-                    Picker("Genre", selection: $genre) {
-                        ForEach(genres, id: \.self) {
-                            Text($0)
-                        }
-                    }
-                }
-
-                Section("Write a review") {
-                    TextEditor(text: $review)
-
-                    Picker("Rating", selection: $rating) {
-                        ForEach(0..<6) {
-                            Text(String($0))
-                        }
-                    }
-                }
-
-                Section {
-                    Button("Save") {
-                        let newBook = Book(title: title, author: author, genre: genre, review: review, rating: rating, date: Date.now)
+            ZStack {
+                LinearGradient(gradient: Gradient(colors: [Color.white, Color.blue]), startPoint: .top, endPoint: .bottom)
+                    .edgesIgnoringSafeArea(.all)
+                Form {
+                    Section {
+                        TextField("Name of book", text: $title)
+                        TextField("Author's name", text: $author)
                         
-                        modelContext.insert(newBook)
-                        dismiss()
+                        Picker("Genre", selection: $genre) {
+                            ForEach(genres, id: \.self) {
+                                Text($0)
+                            }
+                        }
+                        .pickerStyle(.wheel)
+                        .frame(height: 80)
                     }
+                    .listRowBackground(Color.white.opacity(0.5))
+                    
+                    Section("Write a review") {
+                        TextField("Review...", text: $review)
+                        
+                        Picker("Rating", selection: $rating) {
+                            ForEach(1..<6) {
+                                Text(String($0))
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                    }
+                    .listRowBackground(Color.white.opacity(0.5))
+                    
+                    Section {
+                        Button("Save") {
+                            let newBook = Book(title: title, author: author, genre: genre, review: review, rating: rating, date: Date.now)
+                            
+                            modelContext.insert(newBook)
+                            dismiss()
+                        }
+                    }
+                    .listRowBackground(Color.white.opacity(0.5))
+                    .disabled(!isValid)
                 }
-                .disabled(!isValid)
+                .scrollContentBackground(.hidden)
+                .navigationTitle("Add Book")
             }
-            .navigationTitle("Add Book")
         }
     }
 }
