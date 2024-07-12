@@ -20,38 +20,55 @@ struct ContentView: View {
     
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(books) { book in
-                    NavigationLink(value: book) {
-                        HStack {
-                            EmojiRatingView(rating: book.rating)
-                                .font(.largeTitle)
-
-                            VStack(alignment: .leading) {
-                                Text(book.title)
-                                    .font(.headline)
-                                Text(book.author)
-                                    .foregroundStyle(.secondary)
-                            }
+            ZStack {
+                
+                LinearGradient(gradient: Gradient(colors: [Color.white, Color.blue]), startPoint: .top, endPoint: .bottom)
+                    .edgesIgnoringSafeArea(.all)
+                
+                
+                List {
+                    Section {
+                        ForEach(books) { book in
+                            NavigationLink(value: book) {
+                                HStack {
+                                    EmojiRatingView(rating: book.rating)
+                                        .font(.largeTitle)
+                                    
+                                    VStack(alignment: .leading) {
+                                        Text(book.title)
+                                            .font(.headline)
+                                        Text(book.author)
+                                            .foregroundStyle(.secondary)
+                                        
+                                    }
+                                    
+                                    
+                                }
+                                
+                                
+                                
+                                
+                            }.listRowBackground(book.rating < 2 ? Color.red.opacity(0.3) : Color.white.opacity(0.5))
+                        }
+                        .onDelete(perform: deleteBooks)
+                    }
+                }
+                .scrollContentBackground(.hidden)
+                .navigationTitle("Books")
+                .navigationDestination(for: Book.self) { book in
+                    DetailView(book: book)
+                }
+                
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button("Add book", systemImage: "plus") {
+                            showingAddScreen.toggle()
                         }
                     }
                 }
-                .onDelete(perform: deleteBooks)
-            }
-            .navigationTitle("Books")
-            .navigationDestination(for: Book.self) { book in
-                DetailView(book: book)
-            }
-
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("Add book", systemImage: "plus") {
-                        showingAddScreen.toggle()
-                    }
+                .sheet(isPresented: $showingAddScreen) {
+                    AddBookView()
                 }
-            }
-            .sheet(isPresented: $showingAddScreen) {
-                AddBookView()
             }
         }
     }

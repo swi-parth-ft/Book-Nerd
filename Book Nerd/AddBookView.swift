@@ -17,6 +17,17 @@ struct AddBookView: View {
     @State private var genre = "Fantasy"
     @State private var review = ""
     
+    var isValid: Bool {
+        if title.isEmpty || author.isEmpty {
+            return false
+        } else {
+            for field in [title, author] {
+                if field.trimmingCharacters(in: .whitespaces).isEmpty { return false }
+            }
+            return true
+        }
+    }
+    
     let genres = ["Fantasy", "Horro", "Kids", "Mystery", "Poetry", "Romance", "Thriller"]
     
     var body: some View {
@@ -45,17 +56,20 @@ struct AddBookView: View {
 
                 Section {
                     Button("Save") {
-                        let newBook = Book(title: title, author: author, genre: genre, review: review, rating: rating)
+                        let newBook = Book(title: title, author: author, genre: genre, review: review, rating: rating, date: Date.now)
                         
                         modelContext.insert(newBook)
                         dismiss()
                     }
                 }
+                .disabled(!isValid)
             }
             .navigationTitle("Add Book")
         }
     }
 }
+
+
 
 #Preview {
     AddBookView()
